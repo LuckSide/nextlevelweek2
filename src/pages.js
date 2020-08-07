@@ -1,5 +1,5 @@
 const Database = require('./database/db')
-const { subjects, weekdays, getSubject, convertHoursToMinutes } = require('./utils/format')
+const { subjects, weekdays, getSubjects, convertHoursToMinutes } = require('./utils/format')
 
 function pageLanding(req, res) {
     return res.render("index.html")
@@ -22,12 +22,12 @@ async function pageStudy(req, res) {
         WHERE EXISTS(
             SELECT class_schedule.*
             FROM class_schedule
-            WHERE class_schedule.class_id = class_id = classes.id
+            WHERE class_schedule.class_id = classes.id
             AND class_schedule.weekday = ${filters.weekday}
             AND class_schedule.time_from <= ${timeToMinutes}
             AND class_schedule.time_to > ${timeToMinutes}
         )
-        AND classes.subject = ${filters.subject}
+        AND classes.subject = "${filters.subject}"
             `
 
     try {
@@ -35,7 +35,7 @@ async function pageStudy(req, res) {
         const proffys = await db.all(query)
 
         proffys.map((proffy) => {
-            proffy.subject = getSubject(proffy.subject)
+            proffy.subject = getSubjects(proffy.subject)
         })
 
         return res.render('study.html', { proffys, subjects, filters, weekdays })
@@ -44,7 +44,7 @@ async function pageStudy(req, res) {
         console.log(error)
     }
 
-    return res.render("study.html", { proffys, filters, subjects, weekdays })
+
 }
 
 function pageGiveClasses(req, res) {
@@ -56,7 +56,7 @@ async function saveClasses(req, res) {
 
     const proffyValue = {
         name: req.body.name,
-        avartar: req.body.avartar,
+        avatar: req.body.avatar,
         whatsapp: req.body.whatsapp,
         bio: req.body.bio
     }
