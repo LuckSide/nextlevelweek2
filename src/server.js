@@ -5,7 +5,8 @@ const {
     pageLanding,
     pageStudy,
     pageGiveClasses,
-    saveClasses
+    saveClasses,
+    successPage
 } = require('./pages')
 
 
@@ -17,12 +18,12 @@ nunjucks.configure('src/views', {
 })
 
 server.use(express.urlencoded({ extended: true }))
-
-//configurar arquivos staticos
+    //configurar arquivos staticos
 server.use(express.static("public"))
     //rotas da aplicação
     .get("/", pageLanding)
     .get("/study", pageStudy)
     .get("/give-classes", pageGiveClasses)
+    .get('/success', successPage)
     .post('/save-classes', saveClasses)
     .listen(5500)
